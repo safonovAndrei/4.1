@@ -4,6 +4,7 @@ namespace project34
 {
     
     public sealed class oneDimensionalArray<Z>: baseArray<Z>
+    where Z : IComparable<Z>
     {
 
         private bool isNotRandom = false;
@@ -31,6 +32,7 @@ namespace project34
                 array[i] = Provider.Convert(Console.ReadLine());
             }
         }
+        
 */
         public override void printArray() 
         {
@@ -87,20 +89,32 @@ namespace project34
         }
         public Z[] sortArray()
             {
-        //Как с Z работать?         
+                for(int i = 0; i<array.Length-1; i++)
+                {
+                    for(int j = i+1; j<array.Length; j++)
+                        {
+                            if(array[i].CompareTo(array[j])>0)
+                            {
+                                Z temp = array[i];
+                                array[i] = array[j];
+                                array[j] = temp;
+                            }
+                        }
+                }
+                return array;
             }
         public int numberOfElements()
         {
-            return array.Length+1;
+            
         }
-        public void isElementInArray()
+        public void  isElementInArray()
         {
             bool status = false;
             Console.WriteLine("Введите элемент на проверку на наличие в массиве: ");
             Z element = Provider.Convert(Console.ReadLine());
             for(int i=0; i<array.Length; i++)
             {
-                if(array[i] == element)
+                if(array[i].CompareTo(element) == 0)
                 {
                     bool status = true;
                 }
@@ -111,6 +125,40 @@ namespace project34
             else:
                 Console.WriteLine("Элемент не в массиве!");
         }
+        public int calcCondition(Func<Z, bool> condition)
+        {
+            int numberOfTrueCondition = 0;
+            for(int i = 0; i < array.Length; i++)
+            {
+                if(condition(array[i]))
+                {
+                    numberOfTrueCondition += 1;
+                }
+            }
+            return numberOfTrueCondition;
+        }
+        public bool ifOnly1Condition(Func<Z, bool> condition)
+        {
+            for(int i = 0; i < array.Length; i++)
+            {
+                if(condition(array[i]))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public bool ifAllCondition(Func<Z> condition)
+        {
+            for(int i = 0; i < array.Length; i++)
+            {
+                if(!condition())
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public Z flipArray()
         {
             Z betterArray = new Z[array.Length];
@@ -120,18 +168,48 @@ namespace project34
             }
             return betterArray;
         }
+        public Z maxElement()
+        {
+            Z maxElement = array[0];
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].CompareTo(maxElement) > 0)
+                {
+                    maxElement = array[i];
+                }
+            }
+            return maxElement;
+        }
+        public Z minElement()
+        {
+            Z maxElement = array[0];
+            for (int i = 0; i < array.Length; i++)
+            {
+                if (array[i].CompareTo(maxElement) > 0)
+                {
+                    maxElement = array[i];
+                }
+            }
+            return maxElement;
+        }
         public Z elementsFromToArray()
             {
                 Console.WriteLine("Введите от какого по номеру элемента обрезать массив: ");                
                 int fromElement = int.Parse(Console.ReadLine());
                 Console.WriteLine("Введите до какого по номеру элемента обрезать массив: ");
                 int toElement = int.Parse(Console.ReadLine());
-                Z betterArray = new Z[array.Length];
+                Z betterArray = new Z[toElement-fromElement + 1];
                 for (int i = fromElement; i < toElement; i++)
                 {
                     betterArray[i] = array[i];
                 }
                 return betterArray;
             }
+        /*
+        public ZResult Min<ZResult>(Func<Z, ZResult> projectior)
+        {
+
+        }
+        */
     }
 }
