@@ -7,11 +7,19 @@ namespace project34
     where Z : IComparable<Z>
     {
 
-        private bool isNotRandom = false;
+        private const int defaultC = 7;
+        private int size = 0;
         private Z[] array;
 
-        public oneDimensionalArray(bool isNotRandom, objectProvider<Z> inputProvider): base(isNotRandom, inputProvider){ }
-/*
+        public oneDimensionalArray(int length)
+        {
+            array = new Z[length];
+        }
+        public oneDimensionalArray()
+        {
+            array = new Z[defaultC];
+        }
+        /*
         protected override void getRandomArray()
         {
             Random random = new Random();
@@ -33,7 +41,7 @@ namespace project34
             }
         }
         
-*/
+        */
         public override void printArray() 
         {
             for (int i = 0; i < array.Length; i++)
@@ -43,48 +51,38 @@ namespace project34
             Console.WriteLine(" ");
         }
 
-        public Z[] addElement()
+        public Z[] addElement(Z item)
         {
-            try
+            if (size >= array.Length)
             {
-                Console.Write("Введите элемент для добавления: ");
-                array[array.Length] = Provider.Convert(Console.ReadLine());
-                return array;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Error!");
-                Z[] betterArray = new Z[2*array.Length+1];
-                for(int i=0; i<array.Length; i++)
-                {
-                    betterArray[i] = array[i];
-                }
-                array = betterArray;
-                Console.Write(" => Array.Length = 2*n+1!");
-                addElement();
-            }
+                int lEnght = array.Length * 2 + 1;
+                Array.Resize(ref array, lEnght);
+            }         
+            array[size] = item;
+            size++;
+            return array;
         }
-        public Z[] removeElement()
+        public Z[] removeElement(int index)
         {
             try
             {
-                Console.Write("Введите индекс элемента для удаления: ");
-                int index = int.TryParse(Console.ReadLine());
+                index -= 1;
                 Z[] betterArray = new Z[array.Length - 1];
                 for (int i = 0; i < index; i++)
                 {
                     betterArray[i] = array[i];
                 }
-                for (int i = index; i < array.Length - 1; i++)
+                for (int i = index+1; i < array.Length-1; i++)
                 {
-                    betterArray[i] = array[i + 1];
+                    betterArray[i] = array[i];
                 }
                 array = betterArray;
                 return array;
             }
             catch (Exception e)
             {
-                public Z[] removeElement()
+                Console.WriteLine("Error! " + e.Message);
+                return array;
             }
         }
         public Z[] sortArray()
@@ -103,27 +101,26 @@ namespace project34
                 }
                 return array;
             }
+        /*
         public int numberOfElements()
         {
             
         }
-        public void  isElementInArray()
+        */
+        public void isElementInArray(Z element)
         {
             bool status = false;
-            Console.WriteLine("Введите элемент на проверку на наличие в массиве: ");
-            Z element = Provider.Convert(Console.ReadLine());
             for(int i=0; i<array.Length; i++)
             {
                 if(array[i].CompareTo(element) == 0)
                 {
-                    bool status = true;
+                    status = true;
                 }
             }
             if (status){
                 Console.WriteLine("Элемент в массиве!");
             }
-            else:
-                Console.WriteLine("Элемент не в массиве!");
+            else{Console.WriteLine("Элемент не в массиве!");}
         }
         public int calcCondition(Func<Z, bool> condition)
         {
@@ -148,25 +145,26 @@ namespace project34
             }
             return false;
         }
-        public bool ifAllCondition(Func<Z> condition)
+        public bool ifAllCondition(Func<Z, bool> condition)
         {
             for(int i = 0; i < array.Length; i++)
             {
-                if(!condition())
+                if(!condition(array[i]))
                 {
                     return false;
                 }
             }
             return true;
         }
-        public Z flipArray()
+        public Z[] flipArray()
         {
-            Z betterArray = new Z[array.Length];
-            for (int i = 0; i < array.Length; i++)
+            for (int i = 0; i < array.Length-1-i; i++)
             {
-                betterArray[i] = array[array.Length - 1 - i];
+                Z item = array[i];
+                array[i] = array[array.Length - 1 - i];
+                array[array.Length - 1 - i] = item;
             }
-            return betterArray;
+            return array;
         }
         public Z maxElement()
         {
@@ -182,23 +180,23 @@ namespace project34
         }
         public Z minElement()
         {
-            Z maxElement = array[0];
+            Z minElement = array[0];
             for (int i = 0; i < array.Length; i++)
             {
-                if (array[i].CompareTo(maxElement) > 0)
+                if (array[i].CompareTo(minElement) < 0)
                 {
-                    maxElement = array[i];
+                    minElement = array[i];
                 }
             }
-            return maxElement;
+            return minElement;
         }
-        public Z elementsFromToArray()
+        public Z[] elementsFromToArray()
             {
                 Console.WriteLine("Введите от какого по номеру элемента обрезать массив: ");                
                 int fromElement = int.Parse(Console.ReadLine());
                 Console.WriteLine("Введите до какого по номеру элемента обрезать массив: ");
                 int toElement = int.Parse(Console.ReadLine());
-                Z betterArray = new Z[toElement-fromElement + 1];
+                Z[] betterArray = new Z[toElement-fromElement + 1];
                 for (int i = fromElement; i < toElement; i++)
                 {
                     betterArray[i] = array[i];
